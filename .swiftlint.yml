@@ -1,0 +1,413 @@
+############# Rules Management
+
+disabled_rules: # rule identifiers to exclude from running
+  - array_init
+  - closure_end_indentation
+  - conditional_returns_on_newline
+  - cyclomatic_complexity
+  - discouraged_object_literal
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - empty_xctest_method
+  - explicit_acl
+  - explicit_enum_raw_value
+  - explicit_top_level_acl
+  - explicit_type_interface
+  - extension_access_modifier
+  - file_header
+  - file_length
+  - file_name # Too many exclusions without an ability to use wildcard
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - function_parameter_count
+  - implicitly_unwrapped_optional
+  - let_var_whitespace
+  - line_length
+  - literal_expression_end_indentation # Already covered by SwiftFormat
+  - modifier_order # https://realm.github.io/SwiftLint/modifier_order.html
+  - nesting
+  - no_extension_access_modifier
+  - no_grouping_extension
+  - number_separator
+  - operator_whitespace
+  - orphaned_doc_comment
+  - private_over_fileprivate
+  - redundant_nil_coalescing
+  - sorted_imports # Already covered by SwiftFormat
+  - strict_fileprivate
+  - switch_case_on_newline
+  - todo # Comment to temporary enable TODO and FIXME warnings
+  - trailing_comma
+  - trailing_whitespace
+  - unused_closure_parameter
+  - unused_optional_binding
+  - unused_setter_value
+  - vertical_parameter_alignment # Already covered by SwiftFormat
+  - vertical_parameter_alignment_on_call # Already covered by SwiftFormat
+
+opt_in_rules:
+  - anyobject_protocol # https://realm.github.io/SwiftLint/anyobject_protocol.html
+  - attributes # https://realm.github.io/SwiftLint/attributes.html
+  - closure_spacing # https://realm.github.io/SwiftLint/closure_spacing.html
+  - contains_over_first_not_nil # https://realm.github.io/SwiftLint/contains_over_first_not_nil.html
+  - convenience_type # https://realm.github.io/SwiftLint/convenience_type.html
+  - empty_count # https://realm.github.io/SwiftLint/empty_count.html
+  - empty_string # https://realm.github.io/SwiftLint/empty_string.html
+  - explicit_init # https://realm.github.io/SwiftLint/explicit_init.html
+  - fallthrough # https://realm.github.io/SwiftLint/fallthrough.html
+  - fatal_error_message # https://realm.github.io/SwiftLint/fatal_error_message.html
+  - first_where # https://realm.github.io/SwiftLint/first_where.html
+  - function_default_parameter_at_end # https://realm.github.io/SwiftLint/function_default_parameter_at_end.html
+  - implicit_return # https://realm.github.io/SwiftLint/implicit_return.html
+  - joined_default_parameter # https://realm.github.io/SwiftLint/joined_default_parameter.html
+  - lower_acl_than_parent # https://realm.github.io/SwiftLint/lower_acl_than_parent.html
+  - multiline_arguments # https://realm.github.io/SwiftLint/multiline_arguments.html
+  - multiline_function_chains # https://realm.github.io/SwiftLint/multiline_function_chains.html
+  - multiline_parameters # https://realm.github.io/SwiftLint/multiline_parameters.html
+  - nimble_operator # https://realm.github.io/SwiftLint/nimble_operator.html
+  - operator_usage_whitespace # https://realm.github.io/SwiftLint/operator_usage_whitespace.html
+  - overridden_super_call # https://realm.github.io/SwiftLint/overridden_super_call.html
+  - override_in_extension # https://realm.github.io/SwiftLint/override_in_extension.html
+  - prefixed_toplevel_constant # https://realm.github.io/SwiftLint/prefixed_toplevel_constant.html
+  - private_action # https://realm.github.io/SwiftLint/private_action.html
+  - prohibited_super_call # https://realm.github.io/SwiftLint/prohibited_super_call.html
+  - quick_discouraged_focused_test # https://realm.github.io/SwiftLint/quick_discouraged_focused_test.html
+  - quick_discouraged_pending_test # https://realm.github.io/SwiftLint/quick_discouraged_pending_test.html
+  - single_test_class # https://realm.github.io/SwiftLint/single_test_class.html
+  - sorted_first_last # https://realm.github.io/SwiftLint/sorted_first_last.html
+  - trailing_closure # https://realm.github.io/SwiftLint/trailing_closure.html
+  - unavailable_function # https://realm.github.io/SwiftLint/unavailable_function.html
+  - unneeded_parentheses_in_closure_argument # https://realm.github.io/SwiftLint/unneeded_parentheses_in_closure_argument.html
+  - untyped_error_in_catch # https://realm.github.io/SwiftLint/untyped_error_in_catch.html
+  - yoda_condition # https://realm.github.io/SwiftLint/yoda_condition.html
+
+############# Include and Exclude
+
+included: # paths to include during linting. `--path` is ignored if present.
+  - Notification Content App Extension
+  - Shared
+  - DeveloperChallenge
+
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - .git
+  - build
+  - Carthage
+  - fastlane
+  - Pods
+  - Scripts
+  - ui-native-common
+
+############# Custom Rules
+
+# Regex tester
+# https://rubular.com/r/oi9ubccA3e
+
+# https://github.com/realm/SwiftLint#defining-custom-rules
+# https://github.com/realm/SwiftLint/issues/602
+
+# . matches line separators
+# https://github.com/realm/SwiftLint/issues/1743#issuecomment-319920796
+# https://developer.apple.com/documentation/foundation/nsregularexpression/options/1412529-dotmatcheslineseparators
+
+# sourcekitten syntax --file file.swift
+# You can filter the matches by providing one or more match_kinds, which will reject matches that include syntax kinds that are not present in this list. Here are all the possible syntax kinds:
+      # - argument
+      # - attribute.builtin # E.g. 'private', 'mutating'
+      # - attribute.id
+      # - buildconfig.id
+      # - buildconfig.keyword # E.g. 'subscript', 'init', 'deinit'
+      # - comment
+      # - comment.mark
+      # - comment.url
+      # - doccomment
+      # - doccomment.field
+      # - identifier # E.g. function name or function parameter name
+      # - keyword # E.g. 'func'
+      # - number
+      # - objectliteral
+      # - parameter
+      # - placeholder
+      # - string
+      # - string_interpolation_anchor
+      # - typeidentifier
+
+custom_rules:
+  # Excessive public modifier
+  excessive_public_var_modifier: # rule identifier
+    regex: "public var (?!(?:description: String|debugDescription: String|errorDescription: String?|isEmpty: Bool))" # Exclude public description override extensions.
+    message: "Please remove excessive `public` modifier." # violation message. optional.
+    severity: error
+    
+  excessive_public_static_func_modifier: # rule identifier
+    regex: "public static func [a-zA-Z]+" # Try to exclude operator functions like == or !=.
+    message: "Please remove excessive `public` modifier." # violation message. optional.
+    severity: error
+    
+  excessive_public_extension_modifier: # rule identifier
+    regex: "public extension " # Try to exclude operator functions like == or !=.
+    message: "Please remove excessive `public` modifier." # violation message. optional.
+    severity: error
+    
+  excessive_public_other_modifier: # rule identifier
+    regex: "public override var |public let |public struct |public class |public final class |public enum |public typealias |public init |public required init |public func |public override func |public static var |public static let |public class func "
+    message: "Please remove excessive `public` modifier." # violation message. optional.
+    severity: error
+    
+  excessive_open_modifier: # rule identifier
+    regex: "open var |open override var |open let |open struct |open class |open enum |open func |open override func |open static var |open static let |open static func |open class func "
+    message: "Please remove excessive `open` modifier." # violation message. optional.
+    severity: error
+    
+  # Dedicated operators are preffered
+  dedicated_filter_nil:
+    regex: '\.filter \{[\$0-9a-zA-Z_\n ]* != nil[\n ]*\}'
+    message: "Dedicated operators are preffered to improve code readability. Please use `.filterNil()` operator instead."
+    severity: error
+    
+  dedicated_compact_map:
+    regex: '\.map \{[^\}]*\}[ \n]*[\/a-zA-Z\. ]*[ \n]*\.filterNil\(\)'
+    message: "Dedicated operators are preffered to improve code readability. Please use `.compactMap()` operator instead of `.map().filterNil()`"
+    severity: error
+    
+  # Abbreviation in names
+  abbreviation_id:
+    regex: '[a-z_]Id[s]?(?!(?:[a-z_]))|[a-z_]Url[s]?(?!(?:[a-z]))'
+    message: "Abbreviation should be all capital"
+    severity: error
+    match_kinds:
+      - argument
+      - identifier
+      - parameter
+      - typeidentifier
+
+  # Explicit generic specification of property wrapper attribute is prohibited.
+  prohibited_type_definition:
+    regex: '@[a-zA-Z_]*<'
+    message: "Type definition on a property wrapper is prohibited. Please set type on the property."
+    severity: error
+    
+  # Direct initialization of property wrapper attribute is prohibited.
+  prohibited_wrapped_value:
+    regex: '@[a-zA-Z_]*\(wrappedValue:'
+    message: "Wrapped value init is prohibited. Please set value using ="
+    severity: error
+
+  # Property wrapper outer access is prohibited
+  property_wrapper_outer_access_is_prohibited:
+    # We ignore property wrapper access using `.self` or `.base`.
+    # Then we ignore system properties with underscore.
+    regex: '(?<!self|base|Base)\._(?!(?:userInfo|code|domain|[^a-z]))'
+    message: "Accessing property wrapper fields outside of its declaration scope is prohibited. You should use $ instead and if that's not enough consider to change property access level."
+    severity: error
+
+  # Do not allow attributes over 25 characters in the same line as declaration
+  new_line_attribute:
+    regex: '@[a-zA-Z_]{25,} '
+    message: "Long attributes should be on a separate line."
+    severity: error
+    
+  # Do not allow to use mutable `disposeBag`. It should be binded to the object life-time.
+  let_dispose_bag:
+    regex: 'fileprivate var disposeBag(:| )'
+    message: "Mutable `disposeBag` is prohibited. Please rename or use `let`."
+    severity: error
+
+  # https://oilpatchwriting.wordpress.com/2010/10/22/complete-vs-completed/
+  is_completed:
+    # There is `isCompleted` property for `RxSwift.Event` which is correct usage actually.
+    regex: '(?<!value)\.isCompleted'
+    message: "Please use `isComplete` instead. https://oilpatchwriting.wordpress.com/2010/10/22/complete-vs-completed/"
+    severity: error
+    
+  # Prevents forgotten Quick custom focused functions.
+  quick_custom_discouraged_focused_test:
+    regex: 'fitLayout\(\"|fitOnce\(\"'
+    message: "Discouraged focused test. Other tests won't run while this one is focused"
+    severity: error
+    
+  # Prevents print(_:) function usage.
+  forgotten_print_statement:
+    regex: ' print\('
+    message: "Please remove forgotten 'print(_:)' statement or replace with 'logDebug(_:)' function"
+    severity: error
+    
+  # Positive check logic
+  preffered_has_elements_statement:
+    regex: ' ![a-zA-Z0-9_]*\.isEmpty[^a-zA-Z0-9_].'
+    message: "Positive checks are preffered. Please use `.hasElements` instead."
+    severity: error
+    
+  # Forgotten defer {} operator check for locks
+  defered_lock:
+    regex: '\.lock\(\); (?!(?:defer))'
+    message: "Unlock operation should be defered."
+    severity: error
+    
+  # Preffered final class by default
+  preffered_final_class:
+    # Manager | Controller | ViewModel | ViewController | View
+    regex: '^class .*Manager[: ]|^class [a-zA-Z_]+(?<!View)Controller( \{|:)|^class [a-zA-Z_]*(?<!Base)ViewModel( \{|:)|^class [a-zA-Z_]+(?<!Base)ViewController( \{|:)|^class [a-zA-Z_]*(?<!Base)View( \{|:)'
+    message: "Please use `final class` by default or add `Base` part to the base class name. Other inheritance cases are not preferred but if it's unavoidable please disable the rule for the class."
+    severity: error
+
+############# Rules Configuration
+
+# naming rules can set warnings/errors for min_length and max_length
+# additionally they can set excluded names
+identifier_name:
+  min_length:
+    warning: 0
+    error: 0
+  max_length:
+    warning: 100
+    error: 100
+  allowed_symbols: [_]
+  validates_start_with_lowercase: true
+
+vertical_whitespace:
+  max_empty_lines: 2
+
+large_tuple:
+  warning: 3
+  error: 3
+
+type_name:
+  min_length:
+    warning: 0
+    error: 0
+  max_length:
+    warning: 100
+    error: 100
+  allowed_symbols: [_]
+
+type_body_length:
+  warning: 1000
+  error: 1000
+
+function_body_length:
+  warning: 1000
+  error: 1000
+
+trailing_closure:
+  severity: error
+  only_single_muted_parameter: true
+
+statement_position:
+  severity: error
+
+prohibited_super_call:
+  severity: error
+
+colon:
+  severity: error
+
+discouraged_direct_init:
+  severity: error
+
+switch_case_alignment:
+  severity: error
+
+private_unit_test:
+  severity: error
+
+attributes:
+  severity: error
+
+overridden_super_call:
+  severity: error
+
+multiline_arguments:
+  severity: error
+  only_enforce_after_first_closure_on_first_line: true
+
+prefixed_toplevel_constant:
+  severity: error
+
+empty_count:
+  severity: error
+  
+implicit_return:
+  severity: error
+
+computed_accessors_order:
+  severity: error
+
+opening_brace:
+  allowMultilineFunc: true
+  severity: error
+
+operator_usage_whitespace:
+  severity: error
+
+anyobject_protocol: error
+block_based_kvo: error
+class_delegate_protocol: error
+closing_brace: error
+closure_parameter_position: error
+closure_spacing: error
+comma: error
+compiler_protocol_init: error
+contains_over_first_not_nil: error
+control_statement: error
+convenience_type: error
+dynamic_inline: error
+empty_enum_arguments: error
+empty_parameters: error
+empty_parentheses_with_trailing_closure: error
+empty_string: error
+explicit_init: error
+fallthrough: error
+fatal_error_message: error
+first_where: error
+for_where: error
+function_default_parameter_at_end: error
+implicit_getter: error
+is_disjoint: error
+joined_default_parameter: error
+leading_whitespace: error
+legacy_cggeometry_functions: error
+legacy_constant: error
+legacy_constructor: error
+legacy_nsgeometry_functions: error
+lower_acl_than_parent: error
+mark: error
+multiline_function_chains: error
+multiline_parameters: error
+multiple_closures_with_trailing_closure: error
+nimble_operator: error
+notification_center_detachment: error
+no_fallthrough_only: error
+override_in_extension: error
+private_action: error
+protocol_property_accessors_order: error
+quick_discouraged_focused_test: error
+quick_discouraged_pending_test: error
+redundant_discardable_let: error
+redundant_optional_initialization: error
+redundant_set_access_control: error
+redundant_string_enum_value: error
+redundant_void_return: error
+return_arrow_whitespace: error
+shorthand_operator: error
+single_test_class: error
+sorted_first_last: error
+superfluous_disable_command: error
+syntactic_sugar: error
+trailing_newline: error
+trailing_semicolon: error
+unavailable_function: error
+unneeded_break_in_switch: error
+unneeded_parentheses_in_closure_argument: error
+untyped_error_in_catch: error
+unused_enumerated: error
+valid_ibinspectable: error
+void_return: error
+weak_delegate: error
+xctfail_message: error
+yoda_condition: error
+
+############# Other
+
+reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji)
+

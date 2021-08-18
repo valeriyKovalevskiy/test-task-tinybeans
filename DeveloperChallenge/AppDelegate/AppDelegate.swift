@@ -14,8 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
   
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-      // Override point for customization after application launch.
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
       
       cleanup()
       insertInitialDataToDatabase()
@@ -40,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: - Core Data stack
-
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
@@ -49,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          error conditions that could cause the creation of the store to fail.
         */
         let container = NSPersistentContainer(name: "DeveloperChallenge")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { storeDescription, error in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -67,44 +65,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
-
-    // MARK: - Core Data Saving support
-
-    func saveContext() {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. 
-                // You should not use this function in a shipping application, although it may be useful during development.
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
-    
-    func insertInitialDataToDatabase() {
-        createItem(identifier: "0", message: "Hello world!", author: "Tim")
-        createItem(identifier: "1", message: "Yo!", author: "Rog")
-        createItem(identifier: "2", message: "Swifty", author: "Summer")
-        createItem(identifier: "3", message: "FooBar", author: "Stephen")
-        createItem(identifier: "4", message: "FizzBuzz", author: "Sherif")
-        saveContext()
-    }
-    
-    func cleanup() {
-        try? FileManager.default.contentsOfDirectory(at: NSPersistentContainer.defaultDirectoryURL(), includingPropertiesForKeys: nil, options: []).forEach(FileManager.default.removeItem)
-    }
-    
-    func createItem(identifier: String, message: String, author: String, date: Date = Date()) {
-        let entity = RedditEntity(context: persistentContainer.viewContext)
-        entity.identifier = identifier
-        entity.message = message
-        entity.author = author
-        entity.date = date as Date
-    }
-
 }
-
