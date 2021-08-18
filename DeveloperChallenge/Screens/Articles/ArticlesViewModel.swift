@@ -20,7 +20,15 @@ final class ArticlesViewModel {
     }
     
     func fetchData() {
-        reddits = try! getContext().fetch(RedditEntity.fetchRequest())
+        do {
+            let redditsResponse: [RedditEntity] = try getContext().fetch(RedditEntity.fetchRequest())
+            let sortedByDateReddits = redditsResponse.sorted { $0.date ?? Date() < $1.date ?? Date() }
+            let sortedByScoreReddits = sortedByDateReddits.sorted { $0.score > $1.score }
+            
+            reddits = sortedByScoreReddits
+        } catch {
+            fatalError(error.localizedDescription)
+        }
     }
     
     func fetchReddits(completion: @escaping (Bool) -> Void) {
@@ -47,13 +55,16 @@ final class ArticlesViewModel {
                                     if let item = jsonDict["data"] as? [AnyHashable: Any],
                                        let message = item["selftext"] as? String,
                                        let identifier = item["id"] as? String,
+                                       let score = item["score"] as? Int16,
                                        let createdAt = item["created"] as? Int,
                                        let author = item["author"] as? String {
+                                        
                                         let newEntity = RedditEntity(context: getContext())
+                                        let date = Date(timeIntervalSince1970: TimeInterval(createdAt))
+                                        newEntity.score = score
                                         newEntity.identifier = identifier
                                         newEntity.author = author
                                         newEntity.message = message
-                                        let date = Date(timeIntervalSince1970: TimeInterval(createdAt))
                                         newEntity.date = date
                                     }
                                 }

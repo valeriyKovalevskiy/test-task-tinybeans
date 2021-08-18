@@ -35,7 +35,7 @@ final class ArticlesViewController: UIViewController {
     }
     
     private func setupNavigationItems() {
-        navigationItem.title = "Reddit"
+        navigationItem.title = Constants.navigationTitle
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refreshData))
     }
     
@@ -64,13 +64,21 @@ final class ArticlesViewController: UIViewController {
 extension ArticlesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeue(ArticlesTableViewCell.self, for: indexPath)
-        cell.textLabel?.text = viewModel.reddits[indexPath.row].message
-        cell.detailTextLabel?.text = viewModel.reddits[indexPath.row].author
+        let model = viewModel.reddits[indexPath.row]
+        let viewModel = ArticlesTableViewCellViewModel(model: model)
+        cell.configure(with: viewModel)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.reddits.count
+    }
+}
+
+// MARK: - Constants
+fileprivate extension ArticlesViewController {
+    enum Constants {
+        static let navigationTitle = "Reddit"
     }
 }
