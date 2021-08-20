@@ -46,15 +46,29 @@ Once you’re happy with the status of your project, please email the following 
 *Your Code.* Zip up the project and include it in the email. This can be either flat files, or a zipped up git repo containing development history. Please name the file: [firstname]_[lastname].zip.
 In a README in that project, please include:
 
-*1* *Build Tools & Versions Used.* Please tell us what version of Xcode, Android Studio, IntelliJ, etc you used to build and test your project, as well as what versions of iOS or Android we should use to evaluate your submission.
+*1* *Build Tools & Versions Used.*Please tell us what version of Xcode, Android Studio, IntelliJ, etc you used to build and test your project, as well as what versions of iOS or Android we should use to evaluate your submission.
+
+- XCode Version 12.5.1 (12E507)
+- iPhone 8 Simulator iOS 13.5
 
 *2* *Your Focus Areas.* What area(s) did you focus on when working on the project? The architecture and data flow? The UI? Something else? Please note what you think best exhibits your skills and areas of expertise.
 
+- Achitecture, 
+- UI
+- Reusable pieces of code
+
 *3* *Copied-in code or copied-in dependencies.* We’re obviously looking to evaluate your skills as an engineer! As such, please tell us which code you’ve copied into your project so we can distinguish between code written for this project, vs code written at another time, or by others (if you’re just referencing a dependency via a dependency manager, no need to call it out here).
+
+- protocols 
+- tableView extensions
 
 *4* *Tablet / phone focus.* If you focused on one or the other of tablet or phone, please let us know which one.
 
+- phone
+
 *5* *How long you spent on the project.* We’d like to know how long you spent on the project so we can calibrate our review. Please do not feel like you need to spend more than the expected 4-5 hours.
+
+~ 6-8 hours in summary
 
 *6* *Anything else you want us to know.* If there’s anything else of note that you think we should know while evaluating the project, please let us know!
 
