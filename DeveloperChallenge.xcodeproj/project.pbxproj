@@ -20,6 +20,7 @@
 		1E7C5C1C26CF771D0026FB1E /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1926CF771D0026FB1E /* DownloadService.swift */; };
 		1E7C5C1E26CF78C70026FB1E /* ArticlesArchiveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */; };
 		1E7C5C2326CFBD9A0026FB1E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C2226CFBD9A0026FB1E /* BaseViewController.swift */; };
+		1E7C5C2526CFC58E0026FB1E /* ArticlesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C2426CFC58E0026FB1E /* ArticlesViewModelTests.swift */; };
 		1EB8075326CE476600C6261B /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075226CE476600C6261B /* DownloadProgressView.swift */; };
 		1EB8075526CE476D00C6261B /* DownloadProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EB8075426CE476D00C6261B /* DownloadProgressView.xib */; };
 		1EB8075726CE487600C6261B /* DownloadProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */; };
@@ -56,6 +57,7 @@
 		1E7C5C1926CF771D0026FB1E /* DownloadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesArchiveResponse.swift; sourceTree = "<group>"; };
 		1E7C5C2226CFBD9A0026FB1E /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		1E7C5C2426CFC58E0026FB1E /* ArticlesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesViewModelTests.swift; sourceTree = "<group>"; };
 		1EB8075226CE476600C6261B /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		1EB8075426CE476D00C6261B /* DownloadProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadProgressView.xib; sourceTree = "<group>"; };
 		1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressViewModel.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				F9598A1B1EB705D400B17BEF /* DeveloperChallengeTests.swift */,
+				1E7C5C2426CFC58E0026FB1E /* ArticlesViewModelTests.swift */,
 				F9598A1D1EB705D400B17BEF /* Info.plist */,
 			);
 			path = DeveloperChallengeTests;
@@ -488,6 +491,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9598A1C1EB705D400B17BEF /* DeveloperChallengeTests.swift in Sources */,
+				1E7C5C2526CFC58E0026FB1E /* ArticlesViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -96,23 +96,38 @@ final class ArticlesViewModel: NSObject {
             })
             .disposed(by: disposeBag)
     }
-    // TODO: - Handle persistence
 
     // MARK: - Open
     func fetchData() {
         do {
             let redditsResponse: [RedditEntity] = try getContext().fetch(RedditEntity.fetchRequest())
-            let sortedByDateReddits = redditsResponse.sorted { $0.date ?? Date() < $1.date ?? Date() }
-            let sortedByScoreReddits = sortedByDateReddits.sorted { $0.score > $1.score }
-            
-            dataSource.accept(sortedByScoreReddits)
+            let filteredDataSource = filterDublicasDataSource(redditsResponse)
+            let sortedDataSource = sortedDataSource(filteredDataSource)
+            dataSource.accept(sortedDataSource)
         } catch {
             loadingState.accept(.error(.fetchFromDatabaseError))
         }
     }
 
-    private func sortDataSource(_ datasource: [RedditEntity]) -> [RedditEntity] {
-        []
+    private func filterDublicasDataSource(_ dataSource: [RedditEntity]) -> [RedditEntity] {
+        let setOfEntities = Set(dataSource.compactMap { $0.identifier })
+        debugPrint(setOfEntities.count)
+        
+        var newArray: [RedditEntity] = []
+        setOfEntities.forEach { id in
+            guard let matchesEntity = dataSource.first(where: { $0.identifier == id }) else { return }
+            
+            newArray.append(matchesEntity)
+        }
+        
+        return newArray
+    }
+    
+    // FIXME: - Better way to sort with predicates?
+    private func sortedDataSource(_ datasource: [RedditEntity]) -> [RedditEntity] {
+        datasource
+            .sorted { $0.date ?? Date() < $1.date ?? Date() }
+            .sorted { $0.score > $1.score }
     }
     
     func cancelDownload() {
@@ -146,13 +161,13 @@ final class ArticlesViewModel: NSObject {
             
             let contents = try! FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
             
-            contents[0...1].forEach { url in
+            contents.forEach { url in
                 if let data = try? Data(contentsOf: url),
                    let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [AnyHashable: Any],
                    let jsonData = json["data"] as? [AnyHashable: Any],
                    let items = jsonData["children"] as? [[AnyHashable: Any]] {
                     
-                    items[0...1].forEach { jsonDict in
+                    items.forEach { jsonDict in
                         if let item = jsonDict["data"] as? [AnyHashable: Any],
                            let message = item["selftext"] as? String,
                            let identifier = item["id"] as? String,
@@ -172,8 +187,8 @@ final class ArticlesViewModel: NSObject {
                 }
             }
             
-            self.fetchData()
             saveContext()
+            self.fetchData()
             self.loadingState.accept(.ready)
         }
     }
