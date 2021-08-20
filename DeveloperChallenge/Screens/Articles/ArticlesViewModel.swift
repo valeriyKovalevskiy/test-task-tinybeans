@@ -14,50 +14,107 @@ import RxSwift
 import RxCocoa
 
 final class ArticlesViewModel: NSObject {
-    enum LoadingError {
+    // MARK: - Enums
+    private enum LoadingError {
         case badURLError
         case unzipError
         case invalidStateError
         case fetchFromDatabaseError
+        case `default`
     }
     
-    enum LoadingState: Equatable {
+    private enum LoadingState: Equatable {
         case ready
         case loading
         case error(LoadingError)
     }
     
+    // MARK: - Properties
     private let disposeBag = DisposeBag()
     private var downloadService = DownloadService<ArticlesArchiveModel>()
-    private(set) var reddits = BehaviorRelay<[RedditEntity]>(value: [])
-    private(set) var progress = BehaviorRelay<Float>(value: 0.0)
-    private(set) var loadingState = BehaviorRelay<LoadingState>(value: .ready)
-    
+    private var loadingState = BehaviorRelay<LoadingState>(value: .ready)
+    private var thrownError = BehaviorRelay<LoadingError>(value: .default)
     private lazy var downloadsSession: URLSession = {
-      let configuration = URLSessionConfiguration.default
-        
-      return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     }()
     
+    // MARK: - UI observables
+    private(set) var isDownloading = BehaviorRelay<Bool>(value: false)
+    private(set) var isReady = BehaviorRelay<Bool>(value: true)
+    private(set) var shouldUpdateLayout = BehaviorRelay<Bool>(value: false)
+    private(set) var progressValue = BehaviorRelay<Float>(value: 0.0)
+    private(set) var dataSource = BehaviorRelay<[RedditEntity]>(value: [])
+
+    // MARK: - Init
     override init() {
         super.init()
-        // TODO: - Bindings and handle states
-        // TODO: - Handle persistence
+
+        setupDownloadService()
+        setupBindings()
+    }
+    
+    // MARK: - Private
+    private func setupDownloadService() {
         downloadService.downloadsSession = downloadsSession
     }
     
+    private func setupBindings() {
+        dataSource
+            .map { _ in true }
+            .bind(to: shouldUpdateLayout)
+            .disposed(by: disposeBag)
+        
+        loadingState
+            .map { $0 == .loading }
+            .bind(to: isDownloading)
+            .disposed(by: disposeBag)
+        
+        loadingState
+            .map { $0 == .ready }
+            .bind(to: isReady)
+            .disposed(by: disposeBag)
+        
+        loadingState
+            .map { state -> LoadingError in
+                switch state {
+                case .error(let error):
+                    return error
+                default:
+                    return .default
+                }
+            }
+            .bind(to: thrownError)
+            .disposed(by: disposeBag)
+        
+        
+        thrownError
+            .filter { $0 != .default }
+            .subscribe(onNext: {
+                
+                // TODO: - Bind or subscribe for some error texts changes
+                debugPrint($0)
+            })
+            .disposed(by: disposeBag)
+    }
+    // TODO: - Handle persistence
+
+    // MARK: - Open
     func fetchData() {
         do {
             let redditsResponse: [RedditEntity] = try getContext().fetch(RedditEntity.fetchRequest())
             let sortedByDateReddits = redditsResponse.sorted { $0.date ?? Date() < $1.date ?? Date() }
             let sortedByScoreReddits = sortedByDateReddits.sorted { $0.score > $1.score }
             
-            reddits.accept(sortedByScoreReddits)
+            dataSource.accept(sortedByScoreReddits)
         } catch {
             loadingState.accept(.error(.fetchFromDatabaseError))
         }
     }
 
+    private func sortDataSource(_ datasource: [RedditEntity]) -> [RedditEntity] {
+        []
+    }
+    
     func cancelDownload() {
         guard loadingState.value == .loading else {
             loadingState.accept(.error(.invalidStateError))
@@ -74,7 +131,7 @@ final class ArticlesViewModel: NSObject {
             return
         }
         
-        progress.accept(0.0)
+        progressValue.accept(0.0)
         loadingState.accept(.loading)
         downloadService.startDownload(.reddits)
     }
@@ -89,13 +146,13 @@ final class ArticlesViewModel: NSObject {
             
             let contents = try! FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
             
-            contents.forEach { url in
+            contents[0...1].forEach { url in
                 if let data = try? Data(contentsOf: url),
                    let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [AnyHashable: Any],
                    let jsonData = json["data"] as? [AnyHashable: Any],
                    let items = jsonData["children"] as? [[AnyHashable: Any]] {
                     
-                    items.forEach { jsonDict in
+                    items[0...1].forEach { jsonDict in
                         if let item = jsonDict["data"] as? [AnyHashable: Any],
                            let message = item["selftext"] as? String,
                            let identifier = item["id"] as? String,
@@ -112,8 +169,6 @@ final class ArticlesViewModel: NSObject {
                             newEntity.date = date
                         }
                     }
-                    
-                    
                 }
             }
             
@@ -147,7 +202,7 @@ extension ArticlesViewModel: URLSessionDownloadDelegate {
         }
         
         download.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-        progress.accept(download.progress)
+        progressValue.accept(download.progress)
     }
 }
 

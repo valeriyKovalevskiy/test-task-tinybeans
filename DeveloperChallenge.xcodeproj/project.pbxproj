@@ -19,6 +19,7 @@
 		1E7C5C1B26CF771D0026FB1E /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1826CF771D0026FB1E /* Download.swift */; };
 		1E7C5C1C26CF771D0026FB1E /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1926CF771D0026FB1E /* DownloadService.swift */; };
 		1E7C5C1E26CF78C70026FB1E /* ArticlesArchiveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */; };
+		1E7C5C2326CFBD9A0026FB1E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C2226CFBD9A0026FB1E /* BaseViewController.swift */; };
 		1EB8075326CE476600C6261B /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075226CE476600C6261B /* DownloadProgressView.swift */; };
 		1EB8075526CE476D00C6261B /* DownloadProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EB8075426CE476D00C6261B /* DownloadProgressView.xib */; };
 		1EB8075726CE487600C6261B /* DownloadProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */; };
@@ -54,6 +55,7 @@
 		1E7C5C1826CF771D0026FB1E /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		1E7C5C1926CF771D0026FB1E /* DownloadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesArchiveResponse.swift; sourceTree = "<group>"; };
+		1E7C5C2226CFBD9A0026FB1E /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1EB8075226CE476600C6261B /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		1EB8075426CE476D00C6261B /* DownloadProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadProgressView.xib; sourceTree = "<group>"; };
 		1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressViewModel.swift; sourceTree = "<group>"; };
@@ -107,8 +109,8 @@
 			isa = PBXGroup;
 			children = (
 				1E7A965826CD066C00F92941 /* ArticlesTableViewCell */,
-				F9598A051EB705D300B17BEF /* ArticlesViewController.swift */,
 				1E7A963926CCEB8600F92941 /* ArticlesViewController.storyboard */,
+				F9598A051EB705D300B17BEF /* ArticlesViewController.swift */,
 				1E7A964226CCF14100F92941 /* ArticlesViewModel.swift */,
 			);
 			path = Articles;
@@ -142,7 +144,7 @@
 		1E7A963F26CCEE0100F92941 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				1EB8075926CE80E900C6261B /* Networking */,
+				1E7C5C2126CFBD930026FB1E /* BaseViewController */,
 				1E7A963B26CCEDA400F92941 /* Articles */,
 			);
 			path = Screens;
@@ -175,11 +177,19 @@
 		1E7A965826CD066C00F92941 /* ArticlesTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				1E7A965226CCF77F00F92941 /* ArticlesTableViewCell.swift */,
 				1E7A965326CCF77F00F92941 /* ArticlesTableViewCell.xib */,
+				1E7A965226CCF77F00F92941 /* ArticlesTableViewCell.swift */,
 				1E7A965626CD065100F92941 /* ArticlesTableViewCellViewModel.swift */,
 			);
 			path = ArticlesTableViewCell;
+			sourceTree = "<group>";
+		};
+		1E7C5C2126CFBD930026FB1E /* BaseViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1E7C5C2226CFBD9A0026FB1E /* BaseViewController.swift */,
+			);
+			path = BaseViewController;
 			sourceTree = "<group>";
 		};
 		1EB8075126CE471300C6261B /* DownloadProgressView */ = {
@@ -245,6 +255,7 @@
 				1E7A963D26CCEDBB00F92941 /* AppDelegate */,
 				1E7A963C26CCEDAF00F92941 /* CoreData */,
 				1E7A964626CCF68400F92941 /* Extensions */,
+				1EB8075926CE80E900C6261B /* Networking */,
 				1E7A964926CCF6AA00F92941 /* Protocols */,
 				1E7A963E26CCEDC800F92941 /* Resources */,
 				1E7A963F26CCEE0100F92941 /* Screens */,
@@ -459,6 +470,7 @@
 				1E7C5C1C26CF771D0026FB1E /* DownloadService.swift in Sources */,
 				1E7A965726CD065100F92941 /* ArticlesTableViewCellViewModel.swift in Sources */,
 				1E7A964B26CCF6B100F92941 /* ClassName.swift in Sources */,
+				1E7C5C2326CFBD9A0026FB1E /* BaseViewController.swift in Sources */,
 				F9598A061EB705D300B17BEF /* ArticlesViewController.swift in Sources */,
 				1EB8075726CE487600C6261B /* DownloadProgressViewModel.swift in Sources */,
 				1E7A964526CCF30A00F92941 /* AppDelegate+CoreData.swift in Sources */,
