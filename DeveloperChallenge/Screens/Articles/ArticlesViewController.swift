@@ -7,55 +7,109 @@
 //
 
 import UIKit
+import RxSwift
 
 final class ArticlesViewController: UIViewController {
-    
+    private let disposeBag = DisposeBag()
+
     var viewModel = ArticlesViewModel()
     
     // MARK: - Outlets
+    @IBOutlet private var downloadProgressView: DownloadProgressView!
+    @IBOutlet private var downloadProgressViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var tableView: UITableView!
-    
-    let progressView = UIProgressView(progressViewStyle: .bar)
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         viewModel.fetchData()
+        setupBindings()
         setupTableView()
+        setupDownloadProgressView()
         setupNavigationItems()
-        setupProgressView()
+    }
+
+    // MARK: - Private
+    private func setupBindings() {
+        viewModel.reddits
+            .subscribe(onNext: { [weak self] _ in
+                guard let _self = self else { return }
+                
+                _self.hideDownloadProgressViewWithAnimation()
+                _self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.loadingState
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let _self = self else { return }
+                
+                switch $0 {
+
+                case .loading:
+                    _self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                                                        target: self,
+                                                                        action: #selector(_self.cancelDownload))
+                    
+                case .ready:
+                    _self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh,
+                                                                        target: self,
+                                                                        action: #selector(_self.refreshData))
+
+                default:
+                    break
+                }
+                debugPrint($0)
+            })
+            .disposed(by: disposeBag)
     }
     
-    // MARK: - Private
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerNib(class: ArticlesTableViewCell.self)
     }
     
+    private func setupDownloadProgressView() {
+        let downloadProgressViewModel = DownloadProgressViewModel()
+        viewModel.progress
+            .bind(to: downloadProgressViewModel.progress)
+            .disposed(by: disposeBag)
+        
+        downloadProgressView.configure(with: downloadProgressViewModel)
+        hideDownloadProgressViewWithAnimation()
+    }
+
     private func setupNavigationItems() {
         navigationItem.title = Constants.navigationTitle
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refreshData))
     }
-    
-    private func setupProgressView() {
-        progressView.backgroundColor = UIColor.gray
+
+    @objc
+    private func cancelDownload() {
+        hideDownloadProgressViewWithAnimation()
+        viewModel.cancelDownload()
     }
     
     @objc
     private func refreshData() {
-        self.progressView.progress = 0
-        tableView.tableHeaderView = progressView
-        self.progressView.progress = 0.5
-
-        viewModel.fetchReddits { [weak self] success in
-            guard let _self = self else { return }
-            
-            _self.progressView.setProgress(1, animated: true)
-            _self.viewModel.fetchData()
-            _self.tableView.reloadData()
-            _self.tableView.tableHeaderView = nil
+        showDownloadProgressViewWithAnimation()
+        viewModel.downloadData()
+    }
+    
+    private func showDownloadProgressViewWithAnimation() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.downloadProgressViewHeightConstraint.constant = 30
+            self?.view.layoutIfNeeded()
+        }
+    }
+    
+    private func hideDownloadProgressViewWithAnimation() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.downloadProgressViewHeightConstraint.constant = 0
+            self?.view.layoutIfNeeded()
         }
     }
 }
@@ -64,7 +118,7 @@ final class ArticlesViewController: UIViewController {
 extension ArticlesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeue(ArticlesTableViewCell.self, for: indexPath)
-        let model = viewModel.reddits[indexPath.row]
+        let model = viewModel.reddits.value[indexPath.row]
         let viewModel = ArticlesTableViewCellViewModel(model: model)
         cell.configure(with: viewModel)
         
@@ -72,7 +126,7 @@ extension ArticlesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.reddits.count
+        viewModel.reddits.value.count
     }
 }
 

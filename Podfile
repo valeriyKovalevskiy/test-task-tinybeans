@@ -6,6 +6,8 @@ target 'DeveloperChallenge' do
   use_frameworks!
 
   pod 'SSZipArchive'
+  pod 'RxCocoa', '~> 5.0'
+  pod 'RxSwift', '~> 5.0'
 
   # Pods for DeveloperChallenge
 

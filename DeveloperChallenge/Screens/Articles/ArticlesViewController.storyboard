@@ -17,28 +17,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7f8-wF-UDB" customClass="DownloadProgressView" customModule="DeveloperChallenge" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="88" width="414" height="30"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="RDe-j0-HW6"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Qpb-zr-dC9">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="118" width="414" height="744"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Qpb-zr-dC9" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="cbL-y4-pJc"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="7f8-wF-UDB" secondAttribute="trailing" id="21k-by-eeF"/>
+                            <constraint firstItem="7f8-wF-UDB" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="Mem-yP-4cG"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Qpb-zr-dC9" secondAttribute="trailing" id="erK-4e-UnR"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Qpb-zr-dC9" secondAttribute="bottom" id="ezx-zq-4Zt"/>
+                            <constraint firstItem="Qpb-zr-dC9" firstAttribute="top" secondItem="7f8-wF-UDB" secondAttribute="bottom" id="pd9-zj-D3I"/>
+                            <constraint firstItem="7f8-wF-UDB" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="rsE-G7-T2e"/>
                             <constraint firstItem="Qpb-zr-dC9" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="s5m-Od-ihr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="eTM-CD-8mW"/>
                     <connections>
+                        <outlet property="downloadProgressView" destination="7f8-wF-UDB" id="7ge-gK-p3t"/>
+                        <outlet property="downloadProgressViewHeightConstraint" destination="RDe-j0-HW6" id="Xtm-rI-kGQ"/>
                         <outlet property="tableView" destination="Qpb-zr-dC9" id="t74-A3-BRx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="787" y="104"/>
+            <point key="canvasLocation" x="786.95652173913049" y="103.79464285714285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LgV-b2-Kal">

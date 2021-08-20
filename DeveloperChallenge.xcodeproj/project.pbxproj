@@ -16,6 +16,12 @@
 		1E7A965426CCF77F00F92941 /* ArticlesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A965226CCF77F00F92941 /* ArticlesTableViewCell.swift */; };
 		1E7A965526CCF77F00F92941 /* ArticlesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E7A965326CCF77F00F92941 /* ArticlesTableViewCell.xib */; };
 		1E7A965726CD065100F92941 /* ArticlesTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A965626CD065100F92941 /* ArticlesTableViewCellViewModel.swift */; };
+		1E7C5C1B26CF771D0026FB1E /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1826CF771D0026FB1E /* Download.swift */; };
+		1E7C5C1C26CF771D0026FB1E /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1926CF771D0026FB1E /* DownloadService.swift */; };
+		1E7C5C1E26CF78C70026FB1E /* ArticlesArchiveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */; };
+		1EB8075326CE476600C6261B /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075226CE476600C6261B /* DownloadProgressView.swift */; };
+		1EB8075526CE476D00C6261B /* DownloadProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EB8075426CE476D00C6261B /* DownloadProgressView.xib */; };
+		1EB8075726CE487600C6261B /* DownloadProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */; };
 		31CB4AC2E2914F020205CEB3 /* Pods_DeveloperChallengeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DD0BDBC76F1EE57E8886E10 /* Pods_DeveloperChallengeTests.framework */; };
 		F9598A041EB705D300B17BEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9598A031EB705D300B17BEF /* AppDelegate.swift */; };
 		F9598A061EB705D300B17BEF /* ArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9598A051EB705D300B17BEF /* ArticlesViewController.swift */; };
@@ -45,6 +51,12 @@
 		1E7A965226CCF77F00F92941 /* ArticlesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesTableViewCell.swift; sourceTree = "<group>"; };
 		1E7A965326CCF77F00F92941 /* ArticlesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticlesTableViewCell.xib; sourceTree = "<group>"; };
 		1E7A965626CD065100F92941 /* ArticlesTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		1E7C5C1826CF771D0026FB1E /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		1E7C5C1926CF771D0026FB1E /* DownloadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
+		1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesArchiveResponse.swift; sourceTree = "<group>"; };
+		1EB8075226CE476600C6261B /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
+		1EB8075426CE476D00C6261B /* DownloadProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadProgressView.xib; sourceTree = "<group>"; };
+		1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressViewModel.swift; sourceTree = "<group>"; };
 		6DD0BDBC76F1EE57E8886E10 /* Pods_DeveloperChallengeTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeveloperChallengeTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BEDDC59098D299253CDCBCC /* Pods-DeveloperChallengeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeveloperChallengeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeveloperChallengeTests/Pods-DeveloperChallengeTests.release.xcconfig"; sourceTree = "<group>"; };
 		86CF84EA90409E9DCDA4CDA1 /* Pods-DeveloperChallengeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeveloperChallengeTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DeveloperChallengeTests/Pods-DeveloperChallengeTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +142,7 @@
 		1E7A963F26CCEE0100F92941 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				1EB8075926CE80E900C6261B /* Networking */,
 				1E7A963B26CCEDA400F92941 /* Articles */,
 			);
 			path = Screens;
@@ -167,6 +180,34 @@
 				1E7A965626CD065100F92941 /* ArticlesTableViewCellViewModel.swift */,
 			);
 			path = ArticlesTableViewCell;
+			sourceTree = "<group>";
+		};
+		1EB8075126CE471300C6261B /* DownloadProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				1EB8075226CE476600C6261B /* DownloadProgressView.swift */,
+				1EB8075426CE476D00C6261B /* DownloadProgressView.xib */,
+				1EB8075626CE487600C6261B /* DownloadProgressViewModel.swift */,
+			);
+			path = DownloadProgressView;
+			sourceTree = "<group>";
+		};
+		1EB8075826CE6BDF00C6261B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1EB8075126CE471300C6261B /* DownloadProgressView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1EB8075926CE80E900C6261B /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1E7C5C1826CF771D0026FB1E /* Download.swift */,
+				1E7C5C1926CF771D0026FB1E /* DownloadService.swift */,
+				1E7C5C1D26CF78C70026FB1E /* ArticlesArchiveResponse.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		D059343036B73EA2F8ADED87 /* Frameworks */ = {
@@ -207,6 +248,7 @@
 				1E7A964926CCF6AA00F92941 /* Protocols */,
 				1E7A963E26CCEDC800F92941 /* Resources */,
 				1E7A963F26CCEE0100F92941 /* Screens */,
+				1EB8075826CE6BDF00C6261B /* Views */,
 				1E7A964026CCEEBA00F92941 /* SupportingFiles */,
 			);
 			path = DeveloperChallenge;
@@ -313,6 +355,7 @@
 				1E7A963A26CCEB8600F92941 /* ArticlesViewController.storyboard in Resources */,
 				1E7A965526CCF77F00F92941 /* ArticlesTableViewCell.xib in Resources */,
 				F9598A0E1EB705D300B17BEF /* Assets.xcassets in Resources */,
+				1EB8075526CE476D00C6261B /* DownloadProgressView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,10 +430,16 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-DeveloperChallenge/Pods-DeveloperChallenge-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,14 +455,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E7A965426CCF77F00F92941 /* ArticlesTableViewCell.swift in Sources */,
+				1E7C5C1E26CF78C70026FB1E /* ArticlesArchiveResponse.swift in Sources */,
+				1E7C5C1C26CF771D0026FB1E /* DownloadService.swift in Sources */,
 				1E7A965726CD065100F92941 /* ArticlesTableViewCellViewModel.swift in Sources */,
 				1E7A964B26CCF6B100F92941 /* ClassName.swift in Sources */,
 				F9598A061EB705D300B17BEF /* ArticlesViewController.swift in Sources */,
+				1EB8075726CE487600C6261B /* DownloadProgressViewModel.swift in Sources */,
 				1E7A964526CCF30A00F92941 /* AppDelegate+CoreData.swift in Sources */,
 				1E7A964326CCF14100F92941 /* ArticlesViewModel.swift in Sources */,
 				F9598A0C1EB705D300B17BEF /* DeveloperChallenge.xcdatamodeld in Sources */,
+				1EB8075326CE476600C6261B /* DownloadProgressView.swift in Sources */,
 				F9598A041EB705D300B17BEF /* AppDelegate.swift in Sources */,
 				1E7A964826CCF68E00F92941 /* UITableView+Extension.swift in Sources */,
+				1E7C5C1B26CF771D0026FB1E /* Download.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

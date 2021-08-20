@@ -10,13 +10,40 @@ import Foundation
 import UIKit
 import CoreData
 import SSZipArchive
+import RxSwift
+import RxCocoa
 
-final class ArticlesViewModel {
+final class ArticlesViewModel: NSObject {
+    enum LoadingError {
+        case badURLError
+        case unzipError
+        case invalidStateError
+        case fetchFromDatabaseError
+    }
     
-    var reddits = [RedditEntity]()
-
-    init() {
+    enum LoadingState: Equatable {
+        case ready
+        case loading
+        case error(LoadingError)
+    }
+    
+    private let disposeBag = DisposeBag()
+    private var downloadService = DownloadService<ArticlesArchiveModel>()
+    private(set) var reddits = BehaviorRelay<[RedditEntity]>(value: [])
+    private(set) var progress = BehaviorRelay<Float>(value: 0.0)
+    private(set) var loadingState = BehaviorRelay<LoadingState>(value: .ready)
+    
+    private lazy var downloadsSession: URLSession = {
+      let configuration = URLSessionConfiguration.default
         
+      return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+    }()
+    
+    override init() {
+        super.init()
+        // TODO: - Bindings and handle states
+        // TODO: - Handle persistence
+        downloadService.downloadsSession = downloadsSession
     }
     
     func fetchData() {
@@ -25,78 +52,108 @@ final class ArticlesViewModel {
             let sortedByDateReddits = redditsResponse.sorted { $0.date ?? Date() < $1.date ?? Date() }
             let sortedByScoreReddits = sortedByDateReddits.sorted { $0.score > $1.score }
             
-            reddits = sortedByScoreReddits
+            reddits.accept(sortedByScoreReddits)
         } catch {
-            fatalError(error.localizedDescription)
+            loadingState.accept(.error(.fetchFromDatabaseError))
         }
     }
-    
-    func fetchReddits(completion: @escaping (Bool) -> Void) {
-        let url = URL(string: "https://tinybeans-artifacts.s3.amazonaws.com/ios/developer-challenge/reddit/reddit.zip")!
-        let task = URLSession.shared.downloadTask(with: url) { location, response, error in
-//            self.progressView.progress = 0.5
-            
-            if let locationURL = location {
-                let destination = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("unarchived")
-                
-                if SSZipArchive.unzipFile(atPath: locationURL.path, toDestination: destination.path) {
-                    
-                    DispatchQueue.main.async {
-                        
-                        let contents = try! FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
-                        
-                        contents.forEach { url in
-                            if let data = try? Data(contentsOf: url),
-                               let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [AnyHashable: Any],
-                               let jsonData = json["data"] as? [AnyHashable: Any],
-                               let items = jsonData["children"] as? [[AnyHashable: Any]] {
-                                
-                                items.forEach { jsonDict in
-                                    if let item = jsonDict["data"] as? [AnyHashable: Any],
-                                       let message = item["selftext"] as? String,
-                                       let identifier = item["id"] as? String,
-                                       let score = item["score"] as? Int16,
-                                       let createdAt = item["created"] as? Int,
-                                       let author = item["author"] as? String {
-                                        
-                                        let newEntity = RedditEntity(context: getContext())
-                                        let date = Date(timeIntervalSince1970: TimeInterval(createdAt))
-                                        newEntity.score = score
-                                        newEntity.identifier = identifier
-                                        newEntity.author = author
-                                        newEntity.message = message
-                                        newEntity.date = date
-                                    }
-                                }
-                                
-                                
-                            }
-                        }
 
-                        saveContext()
-                        completion(true)
-                    }
-                    
-                }
-                
-            }
+    func cancelDownload() {
+        guard loadingState.value == .loading else {
+            loadingState.accept(.error(.invalidStateError))
+            return
         }
         
-        task.resume()
+        loadingState.accept(.ready)
+        downloadService.cancelDownload(.reddits)
+    }
+    
+    func downloadData() {
+        guard loadingState.value == .ready else {
+            loadingState.accept(.error(.invalidStateError))
+            return
+        }
+        
+        progress.accept(0.0)
+        loadingState.accept(.loading)
+        downloadService.startDownload(.reddits)
+    }
+    
+    private func unzipResponseAt(path location: URL, to destination: URL) {
+        guard SSZipArchive.unzipFile(atPath: location.path, toDestination: destination.path) else {
+            loadingState.accept(.error(.unzipError))
+            return
+        }
+        
+        DispatchQueue.main.async {
+            
+            let contents = try! FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
+            
+            contents.forEach { url in
+                if let data = try? Data(contentsOf: url),
+                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [AnyHashable: Any],
+                   let jsonData = json["data"] as? [AnyHashable: Any],
+                   let items = jsonData["children"] as? [[AnyHashable: Any]] {
+                    
+                    items.forEach { jsonDict in
+                        if let item = jsonDict["data"] as? [AnyHashable: Any],
+                           let message = item["selftext"] as? String,
+                           let identifier = item["id"] as? String,
+                           let score = item["score"] as? Int16,
+                           let createdAt = item["created"] as? Int,
+                           let author = item["author"] as? String {
+                            
+                            let newEntity = RedditEntity(context: getContext())
+                            let date = Date(timeIntervalSince1970: TimeInterval(createdAt))
+                            newEntity.score = score
+                            newEntity.identifier = identifier
+                            newEntity.author = author
+                            newEntity.message = message
+                            newEntity.date = date
+                        }
+                    }
+                    
+                    
+                }
+            }
+            
+            self.fetchData()
+            saveContext()
+            self.loadingState.accept(.ready)
+        }
     }
 }
 
-// TODO: - Move to core data layer
-
-func getAppDelegate() -> AppDelegate {
-    let delegate = UIApplication.shared.delegate as! AppDelegate
-    return delegate
+// MARK: - URLSession download delegate methods
+extension ArticlesViewModel: URLSessionDownloadDelegate {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        guard let sourceURL = downloadTask.originalRequest?.url else {
+            loadingState.accept(.error(.badURLError))
+            return
+        }
+        
+        let download = downloadService.activeDownloads[sourceURL]
+        download?.downloadData?.downloaded = true
+        downloadService.activeDownloads[sourceURL] = nil
+        unzipResponseAt(path: location, to: Constants.destinationURL)
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        guard let url = downloadTask.originalRequest?.url,
+              let download = downloadService.activeDownloads[url]
+        else {
+            loadingState.accept(.error(.badURLError))
+            return
+        }
+        
+        download.progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        progress.accept(download.progress)
+    }
 }
 
-func saveContext() {
-    getAppDelegate().saveContext()
-}
-
-func getContext() -> NSManagedObjectContext {
-    getAppDelegate().persistentContainer.viewContext
+// MARK: - Constants
+fileprivate extension ArticlesViewModel {
+    enum Constants {
+        static let destinationURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("unarchived")
+    }
 }

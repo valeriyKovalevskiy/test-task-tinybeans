@@ -9,6 +9,20 @@
 import UIKit
 import CoreData
 
+// TODO: - Move to core data layer
+func getAppDelegate() -> AppDelegate {
+    let delegate = UIApplication.shared.delegate as! AppDelegate
+    return delegate
+}
+
+func saveContext() {
+    getAppDelegate().saveContext()
+}
+
+func getContext() -> NSManagedObjectContext {
+    getAppDelegate().persistentContainer.viewContext
+}
+
 extension AppDelegate {
     
     // MARK: - Core Data Saving support
